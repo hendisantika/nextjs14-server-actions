@@ -1,5 +1,6 @@
 'use server';
 import MongoConnect from '@/database/mongodb';
+import {revalidatePath} from "next/cache";
 
 MongoConnect();
 
@@ -32,6 +33,17 @@ export async function contactAdd(data) {
         contact.save();
         const newContact = {...contact._doc, _id: contact._doc._id.toString()};
         revalidatePath('/');
+        return newContact;
+    } catch (e) {
+        return {error: e.message};
+    }
+}
+
+export async function contactDelete(id) {
+    try {
+        const contact = await Contact.findByIdAndDelete(id, {new: true});
+        revalidatePath('/');
+        const newContact = {...contact._doc, _id: contact._doc._id.toString()};
         return newContact;
     } catch (e) {
         return {error: e.message};
