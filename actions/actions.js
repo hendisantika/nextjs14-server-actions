@@ -49,3 +49,13 @@ export async function contactDelete(id) {
         return {error: e.message};
     }
 }
+
+export async function contactView(id) {
+    try {
+        const contact = await Contact.findById(id);
+        const newContact = {...contact._doc, _id: contact._doc._id.toString()};
+        return newContact;
+    } catch (e) {
+        return {error: e.message};
+    }
+}
