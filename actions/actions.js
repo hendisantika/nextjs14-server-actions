@@ -59,3 +59,22 @@ export async function contactView(id) {
         return {error: e.message};
     }
 }
+
+export async function contactUpdate(contact) {
+    try {
+        const contactUpd = await Contact.findByIdAndUpdate(
+            contact._id,
+            {name: contact.name, email: contact.email},
+            {new: true}
+        );
+
+        const newContact = {
+            ...contactUpd._doc,
+            _id: contactUpd._doc._id.toString(),
+        };
+        revalidatePath('/');
+        return newContact;
+    } catch (e) {
+        return {error: e.message};
+    }
+}
