@@ -25,3 +25,15 @@ export async function contactList(params) {
         return {error: e.message};
     }
 }
+
+export async function contactAdd(data) {
+    try {
+        const contact = new Contact(data);
+        contact.save();
+        const newContact = {...contact._doc, _id: contact._doc._id.toString()};
+        revalidatePath('/');
+        return newContact;
+    } catch (e) {
+        return {error: e.message};
+    }
+}
